@@ -16,7 +16,7 @@ import forms
 def index():
     def calculatee(hashtag,noft,lang,type,i):
         text = ''
-        hasttag = hashtag+type
+        hashtag = hashtag+type
         for q in hashtag:
             for tweets in api.search_tweets(q=q,lang=lang,count=noft):
                 text = text + tweets.text
@@ -41,6 +41,7 @@ def index():
                            u"\U000024C2-\U0001F251"
                            "]+", flags=re.UNICODE)
         text = emoji_pattern.sub(r'', string=text)
+        print("Cleaning done")
 
         pl = TextBlob(text).sentiment.polarity
         su = TextBlob(text).sentiment.subjectivity
@@ -106,11 +107,17 @@ def index():
             re.I)
         pronouns = pronounRegex.findall(str(text))
 
+        print("Values Calculated!")
+
         asl = len(wordscopy2) / tns
         awl = len(wordscopy2) / tnw
         loc =  'static/Output Data Structure.xlsx'
         my_wb_obj = load_workbook(filename=loc)
         my_sheet_obj = my_wb_obj.active
+        srocell = my_sheet_obj.cell(row=i,column=1)
+        srocell.value = i-1
+        typecell = my_sheet_obj.cell(row=i,column=2)
+        typecell.value = type
         poscell = my_sheet_obj.cell(row = i, column = 3)
         poscell.value = pos
         negcell = my_sheet_obj.cell(row = i, column = 4)
@@ -138,6 +145,7 @@ def index():
         awlcell = my_sheet_obj.cell(row = i,column = 15)
         awlcell.value = awl
         my_wb_obj.save(loc)
+        print("All values done")
 
         
         # loc = 'static/textfiles/'+type+'.txt'
@@ -147,6 +155,7 @@ def index():
         wordcloud = WordCloud(max_font_size=50, max_words=100, background_color="white").generate(text)
         loc = 'static/wordcloud/wordcloud-'+type+'.png'
         wordcloud.to_file(loc)
+        print("Wordcloud Done")
 
 
     log = pd.read_excel("login_twitter_api.xlsx")
@@ -158,23 +167,32 @@ def index():
 
     form = forms.AddTaskForm()
     if form.validate_on_submit():
-        full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'wordcloud.png')
         auth = tweepy.OAuthHandler(ckey, cskey)
         auth.set_access_token(at, ats)
         api = tweepy.API(auth, wait_on_rate_limit = True)
         hashtag = form.hashtag.data
         noft = form.noft.data
         lang = form.lng.data
-        calculatee(hashtag,noft,lang,'InfrastructureEnhancement',2)
-        calculatee(hashtag,noft,lang,'NationalTeleMedicineProgramme',3)
-        calculatee(hashtag,noft,lang,'DigitalInfrasturcture',4)
-        calculatee(hashtag,noft,lang,'Sustainability',5)
-        calculatee(hashtag,noft,lang,'CryptoAssets',6)
-        calculatee(hashtag,noft,lang,'DirectTax',7)
-        calculatee(hashtag,noft,lang,'Indirecttax',8)
-        
+        print('Submitted ',hashtag)
+        calculatee(hashtag,noft,lang,'CryptoAssets',2)
+        print('CryptoAssets Done')
+        calculatee(hashtag,noft,lang,'DigitalInfrasturcture',3)
+        print('DigitalInfrasturcture Done')
+        calculatee(hashtag,noft,lang,'DirectTax',4)
+        print('DirectTax Done')
+        calculatee(hashtag,noft,lang,'Indirecttax',5)
+        print('Indirecttax Done')
+        calculatee(hashtag,noft,lang,'InfrastructureEnhancement',6)
+        print('InfrastructureEnhancement Done')
+        calculatee(hashtag,noft,lang,'NationalTeleMedicineProgramme',7)
+        print('NationalTeleMedicineProgramme Done')
+        calculatee(hashtag,noft,lang,'Sustainability',8)
+        print('Sustainability Done')
+        loc =  'static/Output Data Structure.xlsx'
+        my_wb_obj = load_workbook(filename=loc)
+        my_sheet_obj = my_wb_obj.active
         # return render_template('index.html',form=form,hashtag=form.hashtag.data,text=text,Sub=su,Pol=pl,status=status,tns=tns,tnw=tnw,ccw=ccw,pcw=pcw,fi=fi,anws=anws,sc=sc,scw=scw,pronouns=len(pronouns),asl=asl,awl=awl)
         # return render_template('index.html',form=form,hashtag=form.hashtag.data,text=text,Sub=su,Pol=pl,loc=full_filename)
-        return render_template('index.html',form=form,hashtag=hashtag,noft=noft,lang=lang)
+        return render_template('index.html',form=form,hashtag=hashtag,noft=noft,lang=lang,sheet=my_sheet_obj)
     return render_template('index.html',form=form,hashtag=form.hashtag.data)
 
