@@ -23,7 +23,7 @@ def index():
         
 
         loc = 'static/textfiles/'+type+'.txt'
-        fp = open(f'{loc}','r+')
+        fp = open(f'{loc}','w+')
         text = text + fp.read()
         # fp.close()
 
@@ -144,7 +144,7 @@ def index():
         # fp = open(f'{loc}','w+')  
         fp.write(wordscopy2)
         fp.close()
-        wordcloud = WordCloud(max_font_size=50, max_words=100, background_color="white").generate(wordscopy2)
+        wordcloud = WordCloud(max_font_size=50, max_words=100, background_color="white").generate(text)
         loc = 'static/wordcloud/wordcloud-'+type+'.png'
         wordcloud.to_file(loc)
 
