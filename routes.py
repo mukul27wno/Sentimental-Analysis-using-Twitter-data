@@ -20,12 +20,13 @@ def index():
         for q in hashtag:
             for tweets in api.search_tweets(q=q,lang=lang,count=noft):
                 text = text + tweets.text
-        
+        print("tweet part done")
 
         loc = 'static/textfiles/'+type+'.txt'
-        fp = open(f'{loc}','w+')
+        fp = open(f'{loc}','r')
         text = text + fp.read()
-        # fp.close()
+        fp.close()
+        print("reading file Done")
 
         
         text = re.sub('@[A-Za-z0-9]+','',text)  #remove @mentions
@@ -148,8 +149,8 @@ def index():
         print("All values done")
 
         
-        # loc = 'static/textfiles/'+type+'.txt'
-        # fp = open(f'{loc}','w+')  
+        loc = 'static/textfiles/'+type+'.txt'
+        fp = open(f'{loc}','w+')  
         fp.write(wordscopy2)
         fp.close()
         wordcloud = WordCloud(max_font_size=50, max_words=100, background_color="white").generate(text)
