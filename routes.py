@@ -17,9 +17,9 @@ def index():
     def calculatee(hashtag,noft,lang,type,i):
         text = ''
         hashtag = hashtag+type
-        for q in hashtag:
-            for tweets in api.search_tweets(q=q,lang=lang,count=noft):
-                text = text + tweets.text
+        # for q in hashtag:
+        #     for tweets in api.search_tweets(q=q,lang=lang,count=noft):
+        #         text = text + tweets.text
         print("tweet part done")
 
         loc = 'static/textfiles/'+type+'.txt'
@@ -42,6 +42,22 @@ def index():
                            u"\U000024C2-\U0001F251"
                            "]+", flags=re.UNICODE)
         text = emoji_pattern.sub(r'', string=text)
+
+
+        punctuations = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
+
+        words = text.split(" ")
+        tnw = 0
+        wordscopy = words
+
+        wordscopy2 = ""
+        for char in wordscopy:
+            if char not in punctuations:
+                wordscopy2 = wordscopy2 + char
+        text = wordscopy2
+
+
+
         print("Cleaning done")
 
         pl = TextBlob(text).sentiment.polarity
@@ -63,19 +79,8 @@ def index():
         tns = 0
         for y in sentences:
             tns = tns + 1  # Total Number of Sentences
-
-        words = text.split(" ")
-        tnw = 0
-        wordscopy = words
-
-        punctuations = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
-
-        wordscopy2 = ""
-        for char in wordscopy:
-            if char not in punctuations:
-                wordscopy2 = wordscopy2 + char
-
-        for x in wordscopy:
+        
+        for x in words:
             tnw = tnw + 1  # Total number of words
 
         ccw = 0
@@ -96,9 +101,8 @@ def index():
         anws = tnw / tns
 
         sc = 0
-        for w in wordscopy2:
-            if (
-                    w == 'a' or w == 'e' or w == 'i' or w == 'o' or w == 'u' or w == 'A' or w == 'E' or w == 'I' or w == 'O' or w == 'U'):
+        for w in text:
+            if (w == 'a' or w == 'e' or w == 'i' or w == 'o' or w == 'u' or w == 'A' or w == 'E' or w == 'I' or w == 'O' or w == 'U'):
                 sc = sc + 1
 
         scw = sc / tnw
@@ -147,8 +151,6 @@ def index():
         awlcell.value = awl
         my_wb_obj.save(loc)
         print("All values done")
-
-        
         loc = 'static/textfiles/'+type+'.txt'
         fp = open(f'{loc}','w+')  
         fp.write(wordscopy2)
@@ -192,8 +194,6 @@ def index():
         loc =  'static/Output Data Structure.xlsx'
         my_wb_obj = load_workbook(filename=loc)
         my_sheet_obj = my_wb_obj.active
-        # return render_template('index.html',form=form,hashtag=form.hashtag.data,text=text,Sub=su,Pol=pl,status=status,tns=tns,tnw=tnw,ccw=ccw,pcw=pcw,fi=fi,anws=anws,sc=sc,scw=scw,pronouns=len(pronouns),asl=asl,awl=awl)
-        # return render_template('index.html',form=form,hashtag=form.hashtag.data,text=text,Sub=su,Pol=pl,loc=full_filename)
         return render_template('index.html',form=form,hashtag=hashtag,noft=noft,lang=lang,sheet=my_sheet_obj)
     return render_template('index.html',form=form,hashtag=form.hashtag.data)
 
