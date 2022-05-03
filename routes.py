@@ -17,9 +17,9 @@ def index():
     def calculatee(hashtag,noft,lang,type,i):
         text = ''
         hashtag = hashtag+type
-        # for q in hashtag:
-        #     for tweets in api.search_tweets(q=q,lang=lang,count=noft):
-        #         text = text + tweets.text
+        for q in hashtag:
+            for tweets in api.search_tweets(q=q,lang=lang,count=noft):
+                text = text + tweets.text
         print("tweet part done")
 
         loc = 'static/textfiles/'+type+'.txt'
