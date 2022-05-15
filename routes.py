@@ -174,8 +174,8 @@ def index():
         auth.set_access_token(at, ats)
         api = tweepy.API(auth, wait_on_rate_limit = True)
         hashtag = form.hashtag.data
-        noft = form.noft.data
-        lang = form.lng.data
+        noft = (form.noft.data)
+        lang = form.lng.data        
         print('Submitted ',hashtag)
         calculatee(hashtag,noft,lang,'CryptoAssets',2)
         print('CryptoAssets Done')
