@@ -1,1 +1,8 @@
 markupsafe
+flask
+tweepy
+textblob
+openpyxl
+wordcloud - download from website install using cmd
+pandas
+flask_wtf
