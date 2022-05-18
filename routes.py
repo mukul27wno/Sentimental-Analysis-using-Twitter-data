@@ -16,10 +16,10 @@ import forms
 def index():
     def calculatee(hashtag,noft,lang,type,i):
         text = ''
-        # hashtag = hashtag+type
-        # for q in hashtag:
-        #     for tweets in api.search_tweets(q=q,lang=lang,count=noft):
-        #         text = text + tweets.text
+        hashtag = hashtag+type
+        for q in hashtag:
+            for tweets in api.search_tweets(q=q,lang=lang,count=noft):
+                text = text + tweets.text
         print("tweet part done")
 
         loc = 'static/textfiles/'+type+'.txt'
@@ -57,10 +57,9 @@ def index():
         text = wordscopy2
 
 
-
         print("Cleaning done")
 
-        pl = TextBlob(text).sentiment.polarity
+        pl = TextBlob(text).sentiment.polarity # -1 to 1
         su = TextBlob(text).sentiment.subjectivity
         if pl <= 0:
             status = 'Negative'
