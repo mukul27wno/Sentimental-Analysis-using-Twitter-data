@@ -195,4 +195,3 @@ def index():
         my_sheet_obj = my_wb_obj.active
         return render_template('index.html',form=form,hashtag=hashtag,noft=noft,lang=lang,sheet=my_sheet_obj)
     return render_template('index.html',form=form,hashtag=form.hashtag.data)
-
